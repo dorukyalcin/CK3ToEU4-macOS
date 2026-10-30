@@ -1,0 +1,958 @@
+diff --git a/CK3ToEU4/Data_Files/configurables/government_map.txt b/CK3ToEU4/Data_Files/configurables/government_map.txt
+index 53c8f5b..48d913e 100644
+--- a/CK3ToEU4/Data_Files/configurables/government_map.txt
++++ b/CK3ToEU4/Data_Files/configurables/government_map.txt
+@@ -4,7 +4,7 @@
+ 
+ # General
+ link = { gov = monarchy ck3gov = feudal_government ck3gov = administrative_government ck3gov = clan_government ck3gov = caliphate_government ck3gov = legion_government ck3gov = roman_government ck3gov = muslim_government ck3gov = imperial_cult_government ck3gov = imperial_government ck3gov = autocratic_government ck3gov = prefeudal_government ck3gov = gupta_government ck3gov = eranshar_government ck3gov = gubernatorial_government ck3gov = bureaucratic_government }
+-link = { gov = theocracy ck3gov = theocracy_government ck3gov = holy_order_government ck3gov = holy_order_government_2 }
++link = { gov = theocracy ck3gov = theocracy_government ck3gov = holy_order_government ck3gov = holy_order_government_2 ck3gov = ecclesiastical_government }
+ link = { gov = republic ck3gov = republic_government ck3gov = mercenary_government ck3gov = city_state_government ck3gov = trade_city_state_government }
+ link = { gov = tribal reform = steppe_horde ck3gov = nomad_government ck3gov = nomadic_government }
+ link = { gov = tribal reform = siberian_tribe ck3gov = herder_government }
+@@ -63,4 +63,4 @@ link = { gov = monarchy reform = daimyo ck3gov = japan_feudal_government }
+ link = { gov = monarchy reform = mandala_reform ck3gov = mandala_government }
+ link = { ck3title = e_japan gov = monarchy reform = shogunate }
+ link = { ck3title = e_goryeo gov = monarchy reform = korean_monarchy }
+-link = { gov = tribal reform = great_mongol_state_reform ck3gov = steppe_admin_government }
+\ No newline at end of file
++link = { gov = tribal reform = great_mongol_state_reform ck3gov = steppe_admin_government }
+diff --git a/CK3ToEU4/Data_Files/configurables/religion_map.txt b/CK3ToEU4/Data_Files/configurables/religion_map.txt
+index d81535e..a16e778 100644
+--- a/CK3ToEU4/Data_Files/configurables/religion_map.txt
++++ b/CK3ToEU4/Data_Files/configurables/religion_map.txt
+@@ -5,6 +5,23 @@
+ ## religious_head: Will map to EU4 religion if it has specified religious head
+ ## school: Specifies the Muslim school of law for EU4
+ 
++# --- CK3 1.20 renamed faiths (old faith names became rites). Mapped to where their main rite used to go. ---
++link = { eu4 = bon_reformed ck3 = bon_faith }
++link = { eu4 = buddhism ck3 = theravada_faith ck3 = maitreya_faith }
++link = { eu4 = mahayana ck3 = mahayana_faith }
++link = { eu4 = vajrayana ck3 = vajrayana_faith }
++link = { eu4 = coptic ck3 = miaphysitism }
++link = { eu4 = confucianism ck3 = confucian_faith ck3 = shangqing_faith }
++link = { eu4 = manichean ck3 = manichaean_faith }
++link = { eu4 = mandeaism ck3 = mandaean_faith }
++link = { eu4 = valentinianism ck3 = gnostic_faith }
++link = { eu4 = hinduism ck3 = vaishnava_faith ck3 = shaiva_faith ck3 = shakta_faith }
++link = { eu4 = sunni ck3 = sadr_al_islam }
++link = { eu4 = jain ck3 = jain_faith }
++link = { eu4 = jewish ck3 = rabbinic_faith }
++link = { eu4 = shinto ck3 = shinto_faith }
++link = { eu4 = yazidi ck3 = yazidi_faith }
++
+ # Akom
+ link = { eu4 = shamanism ck3 = akom_pagan }
+ # Baltic
+diff --git a/CK3ToEU4/Data_Files/configurables/religions/dynamic/doctrine_definitions.txt b/CK3ToEU4/Data_Files/configurables/religions/dynamic/doctrine_definitions.txt
+index 9be55ac..b6621e7 100644
+--- a/CK3ToEU4/Data_Files/configurables/religions/dynamic/doctrine_definitions.txt
++++ b/CK3ToEU4/Data_Files/configurables/religions/dynamic/doctrine_definitions.txt
+@@ -138,15 +138,6 @@ tenet_mendicant_preachers = {
+ 	}
+ }
+ 
+-tenet_monasticism = {
+-	country = {
+-		missionary_maintenance_cost = -0.4
+-	}
+-	country_as_secondary = {
+-		missionary_maintenance_cost = -0.2
+-	}
+-}
+-
+ tenet_pacifism = {
+ 	country = {
+ 		stability_cost_to_declare_war = 1
+@@ -354,11 +345,8 @@ tenet_adorcism = {
+ }
+ 
+ tenet_ancestor_worship = {
+-	country = {
+-		diplomatic_reputation = 1
+-	}
+-	country_as_secondary = {
+-		diplomatic_reputation = 1
++	not_unique_modifiers = {
++		ancestors = yes
+ 	}
+ }
+ 
+@@ -377,7 +365,7 @@ tenet_hedonistic = {
+ 		prestige = 0.5
+ 	}
+ 	country_as_secondary = {
+-		prestige 0.5
++		prestige = 0.5
+ 	}
+ }
+ 
+@@ -963,6 +951,50 @@ doctrine_monotheist = {
+ 		tolerance_heretic = -1
+ 	}
+ }
++
++doctrine_scriptural = {
++}
++doctrine_mythic_literary = {
++}
++doctrine_oral_storytelling = {
++}
++doctrine_oral_storytelling = {
++}
++
++doctrine_monasticism_encouraged = {
++	country = {
++		missionary_maintenance_cost = -0.4
++	}
++	country_as_secondary = {
++		missionary_maintenance_cost = -0.2
++	}
++}
++
++doctrine_monasticism_accepted = {
++	country = {
++		missionary_maintenance_cost = -0.2
++	}
++	country_as_secondary = {
++		missionary_maintenance_cost = -0.1
++	}
++}
++
++doctrine_monasticism_absent = {
++}
++
++doctrine_monasticism_forbidden = {
++	country = {
++		missionary_maintenance_cost = 0.2
++	}
++	country_as_secondary = {
++		missionary_maintenance_cost = 0.1
++	}
++}
++
++doctrine_sacraments_central = {
++}
++doctrine_sacraments_absent = {
++}
+ ##Theocracy
+ doctrine_theocracy_temporal = {
+ }
+@@ -1035,6 +1067,12 @@ doctrine_clerical_succession_temporal_fixed_appointment = {
+ doctrine_clerical_succession_spiritual_fixed_appointment = {
+ }
+ 
++doctrine_clerical_succession_conditional = {
++}
++##Pilgrimage
++doctrine_pilgrimage_forbidden = {
++}
++
+ ###Special/Other
+ ##Muhammad Succession
+ muhammad_succession_sunni_doctrine = {
+@@ -1204,6 +1242,13 @@ special_doctrine_ecumenical_christian  = {
+ 		misguided_heretic = yes
+ 	}
+ }
++special_doctrine_ecumenical_miaphysite  = {
++	not_unique_modifiers = {
++		misguided_heretic = yes
++	}
++}
++special_doctrine_has_clerical_electors = {
++}
+ ##Heresy Hostility
+ heresy_hostility_doctrine = {
+ }
+@@ -1213,6 +1258,15 @@ special_doctrine_naked_priests = {
+ ## ?
+ special_doctrine_not_allowed_to_hof = {
+ }
++special_doctrine_prophecy_of_malachi = {
++}
++
++special_doctrine_is_western_christian_faith = {
++}
++special_doctrine_is_eastern_christian_faith = {
++}
++special_doctrine_pope_blessing = {
++}
+ ##Unreformed
+ unreformed_faith_doctrine = {
+ 	country = {
+@@ -2055,3 +2109,151 @@ special_doctrine_is_manichaean_faith = {
+ 		}
+ 	}
+ }
++
++
++tenet_peace_of_god = {
++	country = {
++		diplomatic_reputation = 2
++	}
++}
++tenet_dulia = {
++	country = {
++		global_unrest = -2
++	}
++}
++tenet_transubstantiation = {
++	country = {
++		prestige_from_land = 0.1
++	}
++}
++tenet_ora_et_labora = {
++	country = {
++		development_cost = -0.05
++	}
++}
++tenet_hyperdulia = {
++	not_unique_modifiers = {
++		may_recruit_female_generals = yes
++	}
++}
++tenet_simony = {
++	country = {
++		global_tax_modifier = 0.15
++	}
++}
++tenet_monophysitism = {
++	country = {
++		prestige = 0.25
++		legitimacy = -0.15
++	}
++}
++tenet_miaphysitism = {
++	country = {
++		legitimacy = 0.25
++		prestige = -0.15
++	}
++}
++tenet_acts_of_apostles = {
++	country = {
++		legitimacy = 0.05
++		prestige = 0.05
++	}
++}
++tenet_purgatory = {
++	country = {
++		legitimacy = 0.1
++	}
++}
++tenet_purgatory = {
++	country = {
++		legitimacy = 0.1
++	}
++}
++tenet_be_fruitful_and_multiply = {
++	country = {
++		heir_chance = 0.25
++	}
++}
++tenet_apostolic_succession = {
++	country = {
++		legitimacy = 0.1
++	}
++}
++tenet_confession = {
++	country = {
++		core_creation = -0.1
++	}
++}
++tenet_original_sin = {
++	country = {
++		global_spy_defence = 0.1
++	}
++}
++tenet_celestial_hierarchy = {
++	country = {
++		stability_cost_modifier = -0.1
++	}
++}
++tenet_miles_christi = {
++	country = {
++		manpower_in_true_faith_provinces  = 0.1
++	}
++}
++tenet_philanthropia = {
++	country = {
++		tolerance_own = 2
++		global_tax_modifier = -0.05
++	}
++}
++tenet_scholasticism = {
++	country = {
++		technology_cost = -0.15
++	}
++}
++tenet_adoptionism = {
++	country = {
++		tolerance_heretic = 2
++	}
++}
++tenet_love_thy_neighbour = {
++	country = {
++		tolerance_heretic = 2
++		tolerance_heathen = 2
++	}
++}
++tenet_divine_liturgy = {
++	country = {
++		build_cost = -0.1
++	}
++}
++tenet_hesychasm = {
++	country = {
++		stability_cost_modifier = -0.05
++		tolerance_own = 1
++	}
++}
++tenet_anachoresis = {
++	country = {
++		movement_speed = 0.05
++	}
++}
++tenet_mortification_of_the_flesh = {
++	country = {
++		tolerance_heretic = 2
++	}
++}
++tenet_holy_myron = {
++	country = {
++		legitimacy = 0.15
++	}
++}
++tenet_khachkar = {
++	country = {
++		defensiveness = 0.15
++	}
++}
++tenet_khachkar = {
++	country = {
++		defensiveness = 0.15
++	}
++}
+diff --git a/CK3ToEU4/Data_Files/configurables/tag_mappings.txt b/CK3ToEU4/Data_Files/configurables/tag_mappings.txt
+index a4b6c89..41e3271 100644
+--- a/CK3ToEU4/Data_Files/configurables/tag_mappings.txt
++++ b/CK3ToEU4/Data_Files/configurables/tag_mappings.txt
+@@ -1560,3 +1560,26 @@ link = { ck3 = c_JAV_mataram eu4 = MTR }
+ link = { ck3 = k_siam eu4 = SIA }
+ link = { ck3 = e_majapahit eu4 = MAJ }
+ link = { ck3 = e_kara_khitai eu4 = KAS }
++
++#Ecclesiastical
++
++link = { ck3 = d_et_africa eu4 = AFR }
++link = { ck3 = d_et_seleucia_ctesiphon eu4 = IRQ }
++link = { ck3 = d_et_armenia eu4 = ARM }
++link = { ck3 = d_et_georgia eu4 = GEO }
++link = { ck3 = d_et_cyprus eu4 = CYP }
++link = { ck3 = d_et_jerusalem eu4 = KOJ }
++link = { ck3 = d_et_constantinople eu4 = BYZ }
++link = { ck3 = d_et_kyiv eu4 = KIE }
++link = { ck3 = d_et_hamburg eu4 = HAM }
++link = { ck3 = d_et_cologne eu4 = KOL }
++link = { ck3 = d_et_magdeburg eu4 = MAG }
++link = { ck3 = d_et_mainz eu4 = MAI }
++link = { ck3 = d_et_trier eu4 = TRI }
++link = { ck3 = d_et_salzburg eu4 = SLZ }
++link = { ck3 = d_et_ragusa eu4 = RAG }
++link = { ck3 = d_et_napoli eu4 = NAP }
++link = { ck3 = d_et_pisa eu4 = PIS }
++link = { ck3 = d_et_roma eu4 = PAP }
++link = { ck3 = d_et_genoa eu4 = GEN }
++link = { ck3 = d_et_milano eu4 = MLO }
+diff --git a/CK3ToEU4/Data_Files/configurables/tradition_ideas.txt b/CK3ToEU4/Data_Files/configurables/tradition_ideas.txt
+index 4e81ce6..0fe6f43 100644
+--- a/CK3ToEU4/Data_Files/configurables/tradition_ideas.txt
++++ b/CK3ToEU4/Data_Files/configurables/tradition_ideas.txt
+@@ -259,9 +259,10 @@ link = { ck3 = { tradition = tradition_sinophilic } eu4 = { diplomatic_reputatio
+ link = { ck3 = { tradition = tradition_tgp_japanese_houses } eu4 = { heir_chance = 0.33 } }
+ link = { ck3 = { tradition = tradition_cultivation } eu4 = { legitimacy = 1 devotion = 1 republican_tradition = 0.3 meritocracy = 1 horde_unity = 1 imperial_mandate = 0.05 } }
+ link = { ck3 = { tradition = tradition_intensive_farming } eu4 = { land_maintenance_modifier = -0.1 } }
+-link = { ck3 = { tradition = tradition_intensive_farming } eu4 = { land_maintenance_modifier = -0.1 } }
+ ### 1.19 - New Tradition
+ link = { ck3 = { tradition = tradition_fortress_mastery } eu4 = { defensiveness = 0.15 } }
++### 1.20 - New Tradition
++link = { ck3 = { tradition = tradition_nubian_warrior_kings } eu4 = { monarch_military_power = 1 } }
+ 
+ 
+ ### Rule Overrides
+diff --git a/CK3ToEU4/Data_Files/configurables/version.txt b/CK3ToEU4/Data_Files/configurables/version.txt
+index d857203..af1f42b 100644
+--- a/CK3ToEU4/Data_Files/configurables/version.txt
++++ b/CK3ToEU4/Data_Files/configurables/version.txt
+@@ -4,7 +4,7 @@ version = "0.17Q"
+ name = "Quanzhen"
+ source = "CK3"
+ minSource = "1.18"
+-maxSource = "1.19"
++maxSource = "1.20"
+ target = "EU4"
+ minTarget = "1.37"
+ maxTarget = "1.37"
+diff --git a/CK3ToEU4/Source/CK3World/Characters/Character.cpp b/CK3ToEU4/Source/CK3World/Characters/Character.cpp
+index d140460..208ff7e 100644
+--- a/CK3ToEU4/Source/CK3World/Characters/Character.cpp
++++ b/CK3ToEU4/Source/CK3World/Characters/Character.cpp
+@@ -27,6 +27,11 @@ void CK3::Character::registerKeys()
+ 		if (culture->first == 4294967295)
+ 			culture.reset();
+ 	});
++	registerKeyword("rite", [this](const std::string& unused, std::istream& theStream) {
++		rite = commonItems::singleLlong(theStream).getLlong();
++		if (rite == 4294967295)
++			rite.reset();
++	});
+ 	registerKeyword("faith", [this](const std::string& unused, std::istream& theStream) {
+ 		faith = std::pair(commonItems::singleLlong(theStream).getLlong(), nullptr);
+ 		if (faith->first == 4294967295)
+diff --git a/CK3ToEU4/Source/CK3World/Characters/Character.h b/CK3ToEU4/Source/CK3World/Characters/Character.h
+index de1acbc..dac085c 100644
+--- a/CK3ToEU4/Source/CK3World/Characters/Character.h
++++ b/CK3ToEU4/Source/CK3World/Characters/Character.h
+@@ -38,6 +38,7 @@ class Character: commonItems::parser
+ 
+ 	[[nodiscard]] const auto& getCulture() const { return culture; }
+ 	[[nodiscard]] const auto& getFaith() const { return faith; }
++	[[nodiscard]] const auto& getRite() const { return rite; } // CK3 1.20+: resolve to faith via Rites
+ 	[[nodiscard]] const auto& getEmployer() const { return employer; }
+ 	[[nodiscard]] const auto& getSpouse() const { return spouse; }
+ 	[[nodiscard]] const auto& getSuzerain() const { return suzerain; }
+@@ -93,6 +94,7 @@ class Character: commonItems::parser
+ 
+ 	std::optional<std::pair<long long, std::shared_ptr<Culture>>> culture;
+ 	std::optional<std::pair<long long, std::shared_ptr<Faith>>> faith;
++	std::optional<long long> rite;
+ 	std::optional<std::pair<long long, std::shared_ptr<Character>>> employer;
+ 	std::optional<std::pair<long long, std::shared_ptr<Character>>> spouse;
+ 	std::optional<std::pair<long long, std::shared_ptr<Character>>> suzerain; // Tributary overlord
+diff --git a/CK3ToEU4/Source/CK3World/Geography/CountyDetail.cpp b/CK3ToEU4/Source/CK3World/Geography/CountyDetail.cpp
+index b2eee21..6a6e512 100644
+--- a/CK3ToEU4/Source/CK3World/Geography/CountyDetail.cpp
++++ b/CK3ToEU4/Source/CK3World/Geography/CountyDetail.cpp
+@@ -20,6 +20,11 @@ void CK3::CountyDetail::registerKeys()
+ 		if (culture.first == 4294967295)
+ 			culture.first = 0;
+ 	});
++	registerKeyword("rite", [this](const std::string& unused, std::istream& theStream) {
++		rite = commonItems::singleLlong(theStream).getLlong();
++		if (rite == 4294967295)
++			rite.reset();
++	});
+ 	registerKeyword("faith", [this](const std::string& unused, std::istream& theStream) {
+ 		faith = std::make_pair(commonItems::singleLlong(theStream).getLlong(), nullptr);
+ 		if (faith.first == 4294967295)
+diff --git a/CK3ToEU4/Source/CK3World/Geography/CountyDetail.h b/CK3ToEU4/Source/CK3World/Geography/CountyDetail.h
+index 5f27654..d0b277d 100644
+--- a/CK3ToEU4/Source/CK3World/Geography/CountyDetail.h
++++ b/CK3ToEU4/Source/CK3World/Geography/CountyDetail.h
+@@ -15,6 +15,7 @@ class CountyDetail: commonItems::parser
+ 	[[nodiscard]] auto getDevelopment() const { return development; }
+ 	[[nodiscard]] const auto& getCulture() const { return culture; }
+ 	[[nodiscard]] const auto& getFaith() const { return faith; }
++	[[nodiscard]] const auto& getRite() const { return rite; } // CK3 1.20+: resolve to faith via Rites
+ 	[[nodiscard]] const auto& isDeJureHRE() const { return deJureHRE; }
+ 
+ 	void loadCulture(const std::pair<long long, std::shared_ptr<Culture>>& theCulture) { culture = theCulture; }
+@@ -27,6 +28,7 @@ class CountyDetail: commonItems::parser
+ 	int development = 0;
+ 	std::pair<long long, std::shared_ptr<Culture>> culture;
+ 	std::pair<long long, std::shared_ptr<Faith>> faith;
++	std::optional<long long> rite;
+ 	bool deJureHRE = false;
+ };
+ } // namespace CK3
+diff --git a/CK3ToEU4/Source/CK3World/Religions/Faith.cpp b/CK3ToEU4/Source/CK3World/Religions/Faith.cpp
+index 7a5a68d..d4d46b1 100644
+--- a/CK3ToEU4/Source/CK3World/Religions/Faith.cpp
++++ b/CK3ToEU4/Source/CK3World/Religions/Faith.cpp
+@@ -8,6 +8,11 @@ CK3::Faith::Faith(std::istream& theStream, long long theID): ID(theID)
+ 	registerKeys();
+ 	parseStream(theStream);
+ 	clearRegisteredKeywords();
++
++	// CK3 1.20+ dropped template= for custom/reformed faiths; faith_type names the base faith instead
++	// (for built-in faiths it is simply their own tag).
++	if (religionTemplate.empty() && !faithType.empty() && faithType != tag)
++		religionTemplate = faithType;
+ }
+ 
+ void CK3::Faith::registerKeys()
+@@ -24,6 +29,14 @@ void CK3::Faith::registerKeys()
+ 	registerKeyword("color", [this](const std::string& unused, std::istream& theStream) {
+ 		color = laFabricaDeColor.getColor(theStream);
+ 	});
++	registerKeyword("origin", [this](const std::string& unused, std::istream& theStream) {
++		origin = commonItems::singleLlong(theStream).getLlong();
++		if (origin == 4294967295)
++			origin.reset();
++	});
++	registerKeyword("faith_type", [this](const std::string& unused, std::istream& theStream) {
++		faithType = commonItems::singleString(theStream).getString();
++	});
+ 	registerKeyword("template", [this](const std::string& unused, std::istream& theStream) {
+ 		religionTemplate = commonItems::singleString(theStream).getString();
+ 	});
+diff --git a/CK3ToEU4/Source/CK3World/Religions/Faith.h b/CK3ToEU4/Source/CK3World/Religions/Faith.h
+index bede3b9..a73fd8d 100644
+--- a/CK3ToEU4/Source/CK3World/Religions/Faith.h
++++ b/CK3ToEU4/Source/CK3World/Religions/Faith.h
+@@ -27,8 +27,10 @@ class Faith: commonItems::parser
+ 	[[nodiscard]] const auto& getTemplate() const { return religionTemplate; }
+ 	[[nodiscard]] const auto& getIconPath() const { return iconPath; }
+ 	[[nodiscard]] const auto& getReformedFlag() const { return reformedFlag; }
++	[[nodiscard]] const auto& getOrigin() const { return origin; } // ID of the faith this one split from
+ 
+ 	void setReligiousHead(const auto& newHead) { religiousHead = newHead; }
++	void setTemplate(const std::string& newTemplate) { religionTemplate = newTemplate; }
+ 	void loadReligion(const std::pair<long long, std::shared_ptr<Religion>>& theReligion) { religion = theReligion; }
+ 
+   private:
+@@ -38,6 +40,8 @@ class Faith: commonItems::parser
+ 	long long ID = 0;
+ 	std::string tag;
+ 	std::string religionTemplate;
++	std::string faithType; // CK3 1.20+
++	std::optional<long long> origin;
+ 	std::filesystem::path iconPath;
+ 	std::string customName;
+ 	std::string customAdjective;
+diff --git a/CK3ToEU4/Source/CK3World/Religions/Faiths.cpp b/CK3ToEU4/Source/CK3World/Religions/Faiths.cpp
+index ff0b71e..7fa3611 100644
+--- a/CK3ToEU4/Source/CK3World/Religions/Faiths.cpp
++++ b/CK3ToEU4/Source/CK3World/Religions/Faiths.cpp
+@@ -4,6 +4,8 @@
+ #include "Log.h"
+ #include "ParserHelpers.h"
+ #include "Religions.h"
++#include <ranges>
++#include <set>
+ 
+ CK3::Faiths::Faiths(std::istream& theStream)
+ {
+@@ -18,6 +20,10 @@ void CK3::Faiths::registerKeys()
+ 		auto newFaith = std::make_shared<Faith>(theStream, std::stoll(faithID));
+ 		faiths.insert(std::pair(newFaith->getID(), newFaith));
+ 	});
++	// CK3 1.20+ saves wrap faiths in a top-level faiths={ database={ ... } } block.
++	registerKeyword("database", [this](const std::string& unused, std::istream& theStream) {
++		faiths.merge(Faiths(theStream).faiths);
++	});
+ 	registerRegex(commonItems::catchallRegex, commonItems::ignoreItem);
+ }
+ 
+@@ -46,4 +52,37 @@ void CK3::Faiths::linkReligions(const Religions& religions, const Titles& titles
+ 		}
+ 	}
+ 	Log(LogLevel::Info) << "<> " << counter << " faiths updated.";
+-}
+\ No newline at end of file
++}
++void CK3::Faiths::resolveTemplatesFromOrigins(const std::function<bool(const std::string&)>& isKnown) const
++{
++	auto counter = 0;
++	for (const auto& faith: faiths | std::views::values)
++	{
++		if (isKnown(faith->getName()) || (!faith->getTemplate().empty() && isKnown(faith->getTemplate())))
++			continue;
++
++		std::set<long long> visited{faith->getID()}; // guards against a malformed save with an origin loop
++		for (auto ancestorID = faith->getOrigin(); ancestorID && !visited.contains(*ancestorID); )
++		{
++			visited.insert(*ancestorID);
++			const auto& ancestorItr = faiths.find(*ancestorID);
++			if (ancestorItr == faiths.end())
++				break;
++			const auto& ancestor = ancestorItr->second;
++			std::string match;
++			if (isKnown(ancestor->getName()))
++				match = ancestor->getName();
++			else if (!ancestor->getTemplate().empty() && isKnown(ancestor->getTemplate()))
++				match = ancestor->getTemplate();
++			if (!match.empty())
++			{
++				Log(LogLevel::Info) << "Faith " << faith->getName() << " (" << faith->getCustomName() << ") traced through its origins to " << match << ".";
++				faith->setTemplate(match);
++				++counter;
++				break;
++			}
++			ancestorID = ancestor->getOrigin();
++		}
++	}
++	Log(LogLevel::Info) << "<> " << counter << " faith templates resolved through origins.";
++}
+diff --git a/CK3ToEU4/Source/CK3World/Religions/Faiths.h b/CK3ToEU4/Source/CK3World/Religions/Faiths.h
+index 6d5daee..e3077dc 100644
+--- a/CK3ToEU4/Source/CK3World/Religions/Faiths.h
++++ b/CK3ToEU4/Source/CK3World/Religions/Faiths.h
+@@ -4,6 +4,7 @@
+ #include "../Titles/Title.h"
+ #include "../Titles/Titles.h"
+ #include "Parser.h"
++#include <functional>
+ 
+ namespace CK3
+ {
+@@ -18,6 +19,9 @@ class Faiths: commonItems::parser
+ 	[[nodiscard]] const auto& getFaiths() const { return faiths; }
+ 
+ 	void linkReligions(const Religions& religions, const Titles& titles);
++	// For faiths the converter doesn't know (custom, reformed, split-off rites), walk the origin= chain up to the
++	// nearest ancestor that isKnown accepts and use it as the template. Handles any number of generations of splits.
++	void resolveTemplatesFromOrigins(const std::function<bool(const std::string&)>& isKnown) const;
+ 
+   private:
+ 	void registerKeys();
+diff --git a/CK3ToEU4/Source/CK3World/Religions/Rites.cpp b/CK3ToEU4/Source/CK3World/Religions/Rites.cpp
+new file mode 100644
+index 0000000..f428bfd
+--- /dev/null
++++ b/CK3ToEU4/Source/CK3World/Religions/Rites.cpp
+@@ -0,0 +1,36 @@
++#include "Rites.h"
++#include "CommonRegexes.h"
++#include "ParserHelpers.h"
++
++CK3::Rites::Rites(std::istream& theStream)
++{
++	registerKeys();
++	parseStream(theStream);
++	clearRegisteredKeywords();
++}
++
++void CK3::Rites::registerKeys()
++{
++	registerKeyword("database", [this](const std::string& unused, std::istream& theStream) {
++		riteFaiths.merge(Rites(theStream).riteFaiths);
++	});
++	registerRegex(R"(\d+)", [this](const std::string& riteID, std::istream& theStream) {
++		std::optional<long long> faith;
++		commonItems::parser riteParser;
++		riteParser.registerKeyword("faith", [&faith](std::istream& stream) {
++			faith = commonItems::singleLlong(stream).getLlong();
++		});
++		riteParser.registerRegex(commonItems::catchallRegex, commonItems::ignoreItem);
++		riteParser.parseStream(theStream);
++		if (faith && *faith != 4294967295)
++			riteFaiths.emplace(std::stoll(riteID), *faith);
++	});
++	registerRegex(commonItems::catchallRegex, commonItems::ignoreItem);
++}
++
++std::optional<long long> CK3::Rites::getFaithForRite(const long long riteID) const
++{
++	if (const auto& itr = riteFaiths.find(riteID); itr != riteFaiths.end())
++		return itr->second;
++	return std::nullopt;
++}
+diff --git a/CK3ToEU4/Source/CK3World/Religions/Rites.h b/CK3ToEU4/Source/CK3World/Religions/Rites.h
+new file mode 100644
+index 0000000..f163bfa
+--- /dev/null
++++ b/CK3ToEU4/Source/CK3World/Religions/Rites.h
+@@ -0,0 +1,26 @@
++#ifndef CK3_RITES_H
++#define CK3_RITES_H
++#include "Parser.h"
++#include <map>
++
++namespace CK3
++{
++// CK3 1.20+ saves: characters and counties reference a rite, and each rite belongs to a faith.
++// This only keeps the rite -> faith link so they can be resolved to faiths as before.
++class Rites: commonItems::parser
++{
++  public:
++	Rites() = default;
++	explicit Rites(std::istream& theStream);
++
++	[[nodiscard]] std::optional<long long> getFaithForRite(long long riteID) const;
++	[[nodiscard]] auto size() const { return riteFaiths.size(); }
++
++  private:
++	void registerKeys();
++
++	std::map<long long, long long> riteFaiths; // rite ID -> faith ID
++};
++} // namespace CK3
++
++#endif // CK3_RITES_H
+diff --git a/CK3ToEU4/Source/CK3World/World.cpp b/CK3ToEU4/Source/CK3World/World.cpp
+index 8418f2b..5605a6b 100644
+--- a/CK3ToEU4/Source/CK3World/World.cpp
++++ b/CK3ToEU4/Source/CK3World/World.cpp
+@@ -201,9 +201,22 @@ void CK3::World::registerKeys(const std::shared_ptr<Configuration>& theConfigura
+ 	registerKeyword("religion", [this](const std::string& unused, std::istream& theStream) {
+ 		Log(LogLevel::Info) << "-> Loading religions.";
+ 		religions = Religions(theStream);
+-		faiths = religions.getFaiths(); // Do not access faiths in religions after this - there are none and will crash.
++		// Do not access faiths in religions after this - there are none and will crash.
++		// Pre-1.20 saves keep faiths in here; 1.20+ has a top-level faiths block, so don't clobber that with an empty set.
++		if (auto religionFaiths = religions.getFaiths(); !religionFaiths.getFaiths().empty())
++			faiths = std::move(religionFaiths);
+ 		Log(LogLevel::Info) << "<> Loaded " << religions.getReligions().size() << " religions and " << faiths.getFaiths().size() << " faiths.";
+ 	});
++	registerKeyword("rites", [this](const std::string& unused, std::istream& theStream) {
++		Log(LogLevel::Info) << "-> Loading rites.";
++		rites = Rites(theStream);
++		Log(LogLevel::Info) << "<> Loaded " << rites.size() << " rites.";
++	});
++	registerKeyword("faiths", [this](const std::string& unused, std::istream& theStream) {
++		Log(LogLevel::Info) << "-> Loading faiths.";
++		faiths = Faiths(theStream);
++		Log(LogLevel::Info) << "<> Loaded " << faiths.getFaiths().size() << " faiths.";
++	});
+ 	registerKeyword("coat_of_arms", [this](const std::string& unused, std::istream& theStream) {
+ 		Log(LogLevel::Info) << "-> Loading garments of limbs.";
+ 		coats = CoatsOfArms(theStream);
+@@ -404,6 +417,7 @@ void CK3::World::crosslinkDatabases()
+ 	countyDetails.linkCultures(cultures);
+ 	Log(LogLevel::Info) << "-> Loading Cultures into Characters.";
+ 	characters.linkCultures(cultures);
++	resolveRites();
+ 	Log(LogLevel::Info) << "-> Loading Faiths into Counties.";
+ 	countyDetails.linkFaiths(faiths);
+ 	Log(LogLevel::Info) << "-> Loading Faiths into Characters.";
+@@ -1175,3 +1189,32 @@ void CK3::World::setElectors()
+ 
+ 	Log(LogLevel::Info) << "<> " << counter << " electorates linked.";
+ }
++
++void CK3::World::resolveRites()
++{
++	// CK3 1.20+ saves give counties and characters a rite instead of a faith; each rite belongs to one faith.
++	if (!rites.size())
++		return;
++	Log(LogLevel::Info) << "-> Resolving rites into faiths.";
++	auto counties = 0;
++	auto people = 0;
++	for (const auto& [name, county]: countyDetails.getCountyDetails())
++		if (county->getRite())
++		{
++			if (const auto& faithID = rites.getFaithForRite(*county->getRite()); faithID)
++			{
++				county->loadFaith(std::make_pair(*faithID, nullptr));
++				++counties;
++			}
++			else
++				Log(LogLevel::Warning) << "County " << name << " has rite " << *county->getRite() << " with no faith!";
++		}
++	for (const auto& character: characters.getCharacters() | std::views::values)
++		if (!character->getFaith() && character->getRite())
++			if (const auto& faithID = rites.getFaithForRite(*character->getRite()); faithID)
++			{
++				character->loadFaith(std::make_pair(*faithID, nullptr));
++				++people;
++			}
++	Log(LogLevel::Info) << "<> " << counties << " counties and " << people << " characters resolved.";
++}
+diff --git a/CK3ToEU4/Source/CK3World/World.h b/CK3ToEU4/Source/CK3World/World.h
+index 96d2947..09d2907 100644
+--- a/CK3ToEU4/Source/CK3World/World.h
++++ b/CK3ToEU4/Source/CK3World/World.h
+@@ -23,6 +23,7 @@
+ #include "Parser.h"
+ #include "Religions/Faiths.h"
+ #include "Religions/Religions.h"
++#include "Religions/Rites.h"
+ #include "Titles/LandedTitles.h"
+ #include "Titles/Titles.h"
+ #include <Date.h>
+@@ -87,6 +88,7 @@ class World: commonItems::parser
+ 	void setElectors();
+ 	void checkForIslam();
+ 	void locatePlayerTitle(const std::shared_ptr<Configuration>& theConfiguration);
++	void resolveRites();
+ 
+ 	date endDate = date("1444.11.11");
+ 	date startDate = date("1.1.1");
+@@ -101,6 +103,7 @@ class World: commonItems::parser
+ 	Houses houses;
+ 	Religions religions;
+ 	Faiths faiths;
++	Rites rites; // CK3 1.20+
+ 	CoatsOfArms coats;
+ 	LandedTitles landedTitles;
+ 	Mods mods;
+diff --git a/CK3ToEU4/Source/Configuration/Configuration.cpp b/CK3ToEU4/Source/Configuration/Configuration.cpp
+index 89991c7..13ebb60 100644
+--- a/CK3ToEU4/Source/Configuration/Configuration.cpp
++++ b/CK3ToEU4/Source/Configuration/Configuration.cpp
+@@ -144,7 +144,7 @@ void Configuration::verifyCK3Path()
+ 		throw std::runtime_error(CK3Path.string() + " does not exist!");
+ 	// TODO: OSX and Linux paths are speculative
+ 	if (!commonItems::DoesFileExist(CK3Path / "binaries/ck3.exe") && !commonItems::DoesFileExist(CK3Path / "CK3game") &&
+-		 !commonItems::DoesFileExist(CK3Path / "binaries/ck3"))
++		 !commonItems::DoesFileExist(CK3Path / "binaries/ck3") && !commonItems::DoesFolderExist(CK3Path / "binaries/ck3.app"))
+ 		throw std::runtime_error(CK3Path.string() + " does not contain Crusader Kings 3!");
+ 	if (!commonItems::DoesFileExist(CK3Path / "game/map_data/positions.txt"))
+ 		throw std::runtime_error(CK3Path.string() + " does not appear to be a valid CK3 install!");
+@@ -156,7 +156,7 @@ void Configuration::verifyEU4Path() const
+ {
+ 	if (!commonItems::DoesFolderExist(EU4Path))
+ 		throw std::runtime_error(EU4Path.string() + " does not exist!");
+-	if (!commonItems::DoesFileExist(EU4Path / "eu4.exe") && !commonItems::DoesFileExist(EU4Path / "eu4"))
++	if (!commonItems::DoesFileExist(EU4Path / "eu4.exe") && !commonItems::DoesFileExist(EU4Path / "eu4") && !commonItems::DoesFolderExist(EU4Path / "eu4.app"))
+ 		throw std::runtime_error(EU4Path.string() + " does not contain Europa Universalis 4!");
+ 	if (!commonItems::DoesFileExist(EU4Path / "map/positions.txt"))
+ 		throw std::runtime_error(EU4Path.string() + " does not appear to be a valid EU4 install!");
+diff --git a/CK3ToEU4/Source/EU4World/EU4World.cpp b/CK3ToEU4/Source/EU4World/EU4World.cpp
+index 696be2a..c8cc2a7 100644
+--- a/CK3ToEU4/Source/EU4World/EU4World.cpp
++++ b/CK3ToEU4/Source/EU4World/EU4World.cpp
+@@ -74,6 +74,9 @@ EU4::World::World(const CK3::World& sourceWorld, const Configuration& theConfigu
+ 	// Import CK3 dynamic faiths and register them in religionMapper
+ 	Log(LogLevel::Info) << "-> Importing Dynamic Faiths";
+ 	religionMapper.scrapeCK3Religions(CK3FS);
++	sourceWorld.getFaiths().resolveTemplatesFromOrigins([this](const std::string& faithName) {
++		return religionMapper.getEU4ReligionForCK3Religion(faithName, "").has_value();
++	});
+ 	religionMapper.importCK3Faiths(sourceWorld.getFaiths(), religionDefinitionMapper, religionGroupScraper, localizationMapper);
+ 	Log(LogLevel::Progress) << "54 %";
+ 
+diff --git a/CK3ToEU4/Source/EU4World/FlagFoundry/FlagCrafter.cpp b/CK3ToEU4/Source/EU4World/FlagFoundry/FlagCrafter.cpp
+index b2fadc9..0376ff8 100644
+--- a/CK3ToEU4/Source/EU4World/FlagFoundry/FlagCrafter.cpp
++++ b/CK3ToEU4/Source/EU4World/FlagFoundry/FlagCrafter.cpp
+@@ -161,9 +161,9 @@ std::pair<Magick::Image, Magick::Image> EU4::FlagCrafter::imposeEmblemInstancesO
+ 				continue;
+ 			}
+ 			const auto targetX =
+-				 static_cast<size_t>(instance.getPosition()[0] * static_cast<double>(width) - static_cast<double>(workingEmblem.size().width()) / 2.0);
++				 static_cast<ssize_t>(instance.getPosition()[0] * static_cast<double>(width) - static_cast<double>(workingEmblem.size().width()) / 2.0);
+ 			const auto targetY =
+-				 static_cast<size_t>(instance.getPosition()[1] * static_cast<double>(height) - static_cast<double>(workingEmblem.size().height()) / 2.0);
++				 static_cast<ssize_t>(instance.getPosition()[1] * static_cast<double>(height) - static_cast<double>(workingEmblem.size().height()) / 2.0);
+ 
+ 			// Now it's time for a mask.
+ 			if (masks.size() == 3)
+@@ -234,8 +234,8 @@ std::pair<Magick::Image, Magick::Image> EU4::FlagCrafter::imposeEmblemInstancesO
+ 				Log(LogLevel::Warning) << "Invalid emblem instance position command, array size: " << instance.getPosition().size();
+ 				continue;
+ 			}
+-			const auto targetX = static_cast<size_t>(instance.getOffset()[0] * static_cast<double>(width));
+-			const auto targetY = static_cast<size_t>(instance.getOffset()[1] * static_cast<double>(height));
++			const auto targetX = static_cast<ssize_t>(instance.getOffset()[0] * static_cast<double>(width));
++			const auto targetY = static_cast<ssize_t>(instance.getOffset()[1] * static_cast<double>(height));
+ 			workingImage.composite(workingEmblem, targetX, targetY, MagickCore::OverCompositeOp);
+ 		}
+ 	}
+diff --git a/CK3ToEU4/Source/Mappers/CK3ReligionScraper/CK3ReligionScraper.cpp b/CK3ToEU4/Source/Mappers/CK3ReligionScraper/CK3ReligionScraper.cpp
+index 232c15c..9828e89 100644
+--- a/CK3ToEU4/Source/Mappers/CK3ReligionScraper/CK3ReligionScraper.cpp
++++ b/CK3ToEU4/Source/Mappers/CK3ReligionScraper/CK3ReligionScraper.cpp
+@@ -2,6 +2,7 @@
+ #include "CK3ReligionScraping.h"
+ #include "CommonRegexes.h"
+ #include "Log.h"
++#include "ParserHelpers.h"
+ #include <ranges>
+ 
+ void mappers::CK3ReligionScraper::scrapeCK3Religions(const commonItems::ModFilesystem& modFS)
+@@ -11,6 +12,26 @@ void mappers::CK3ReligionScraper::scrapeCK3Religions(const commonItems::ModFiles
+ 	ParseGameFolder("common/religion/religion_types", modFS, {".txt"}, false);
+ 	ParseGameFolder("common/religion/religions", modFS, {".txt"}, false);
+ 	clearRegisteredKeywords();
++
++	// CK3 1.20+ defines faiths separately, each naming its religion in faith_details = { religion = X }.
++	registerRegex(commonItems::catchallRegex, [this](const std::string& faithName, std::istream& theStream) {
++		std::string religion;
++		commonItems::parser detailsParser;
++		detailsParser.registerKeyword("religion", [&religion](std::istream& stream) {
++			religion = commonItems::getString(stream);
++		});
++		detailsParser.registerRegex(commonItems::catchallRegex, commonItems::ignoreItem);
++		commonItems::parser faithParser;
++		faithParser.registerKeyword("faith_details", [&detailsParser](std::istream& stream) {
++			detailsParser.parseStream(stream);
++		});
++		faithParser.registerRegex(commonItems::catchallRegex, commonItems::ignoreItem);
++		faithParser.parseStream(theStream);
++		if (!religion.empty())
++			religionFaiths[religion].insert(faithName);
++	});
++	ParseGameFolder("common/religion/faith_types", modFS, {".txt"}, false);
++	clearRegisteredKeywords();
+ 	Log(LogLevel::Info) << "<> Loaded " << religionFaiths.size() << " religions.";
+ }
+ 
+diff --git a/CK3ToEU4Tests/CK3WorldTests/ReligionTests/FaithsTests.cpp b/CK3ToEU4Tests/CK3WorldTests/ReligionTests/FaithsTests.cpp
+index 702d42f..0e144a2 100644
+--- a/CK3ToEU4Tests/CK3WorldTests/ReligionTests/FaithsTests.cpp
++++ b/CK3ToEU4Tests/CK3WorldTests/ReligionTests/FaithsTests.cpp
+@@ -63,3 +63,70 @@ TEST(CK3World_FaithsTests, linkingMissingReligionThrowsException)
+ 
+ 	ASSERT_THROW(faiths.linkReligions(religions, titles), std::runtime_error);
+ }
++
++// --- CK3 1.20: faiths wrapped in database={}, faith_type instead of template=, origin= chains ---
++
++namespace
++{
++const auto knowsCatholic = [](const std::string& name) {
++	return name == "catholic";
++};
++}
++
++TEST(CK3World_FaithsTests, faithsLoadFromDatabaseBlock)
++{
++	std::stringstream input;
++	input << "database={ 13={tag=\"catholic\" faith_type=\"catholic\"} 105={tag=\"dynamic_faith_105\" faith_type=\"catholic\" origin=13} }\n";
++	const CK3::Faiths faiths(input);
++
++	ASSERT_EQ(2, faiths.getFaiths().size());
++	EXPECT_TRUE(faiths.getFaiths().at(13)->getTemplate().empty()); // faith_type equals its own tag -> no template
++	EXPECT_EQ("catholic", faiths.getFaiths().at(105)->getTemplate()); // faith_type differs from tag -> template
++	EXPECT_EQ(13, faiths.getFaiths().at(105)->getOrigin());
++}
++
++TEST(CK3World_FaithsTests, oldStyleTemplateStillWins)
++{
++	std::stringstream input;
++	input << "105={tag=\"dynamic_faith_105\" template=\"catholic\" faith_type=\"orthodox\"}\n";
++	const CK3::Faiths faiths(input);
++
++	EXPECT_EQ("catholic", faiths.getFaiths().at(105)->getTemplate());
++}
++
++TEST(CK3World_FaithsTests, splitsOfSplitsTraceBackToKnownAncestor)
++{
++	// Catholic -> Ambrosian (105) -> a split of Ambrosian (200) -> a split of that (300), where the later
++	// generations name an unknown faith_type or none at all.
++	std::stringstream input;
++	input << "database={\n";
++	input << "13={tag=\"catholic\" faith_type=\"catholic\"}\n";
++	input << "105={tag=\"dynamic_faith_105\" faith_type=\"catholic\" origin=13}\n";
++	input << "200={tag=\"dynamic_faith_200\" faith_type=\"dynamic_faith_105\" origin=105}\n";
++	input << "300={tag=\"dynamic_faith_300\" origin=200}\n";
++	input << "}\n";
++	const CK3::Faiths faiths(input);
++
++	faiths.resolveTemplatesFromOrigins(knowsCatholic);
++
++	EXPECT_EQ("catholic", faiths.getFaiths().at(105)->getTemplate());
++	EXPECT_EQ("catholic", faiths.getFaiths().at(200)->getTemplate());
++	EXPECT_EQ("catholic", faiths.getFaiths().at(300)->getTemplate());
++	EXPECT_TRUE(faiths.getFaiths().at(13)->getTemplate().empty()); // known faiths are left alone
++}
++
++TEST(CK3World_FaithsTests, originLoopsAndDeadEndsAreLeftAlone)
++{
++	std::stringstream input;
++	input << "1={tag=\"dynamic_faith_1\" origin=2}\n";
++	input << "2={tag=\"dynamic_faith_2\" origin=1}\n";		// loop
++	input << "3={tag=\"dynamic_faith_3\" origin=999}\n";	// parent missing from save
++	input << "4={tag=\"dynamic_faith_4\" origin=4294967295}\n"; // no origin
++	const CK3::Faiths faiths(input);
++
++	faiths.resolveTemplatesFromOrigins(knowsCatholic); // must terminate
++
++	for (const auto& faith: faiths.getFaiths())
++		EXPECT_TRUE(faith.second->getTemplate().empty()) << faith.first;
++	EXPECT_FALSE(faiths.getFaiths().at(4)->getOrigin());
++}

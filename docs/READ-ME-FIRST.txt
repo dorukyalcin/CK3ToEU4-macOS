@@ -1,0 +1,37 @@
+CK3ToEU4 for macOS (unofficial)
+================================
+
+Turns a Crusader Kings III save into a Europa Universalis IV mod, on a Mac.
+
+This is an unofficial port of the Paradox Game Converters' CK3ToEU4
+(https://github.com/ParadoxGameConverters/CK3ToEU4). Please don't report problems
+with this build to them. Use https://github.com/dorukyalcin/CK3ToEU4-macOS/issues instead.
+
+Needs: an Apple Silicon Mac (M1 or newer) on macOS 13 or later, and CK3 + EU4 from Steam.
+
+
+FIRST TIME ONLY
+---------------
+This build isn't signed with a paid Apple developer account, so macOS blocks it at first.
+Easiest fix: open Terminal and run this (adjust the path if you unzipped somewhere else):
+
+    xattr -dr com.apple.quarantine ~/Downloads/CK3ToEU4-macOS
+
+Or: double-click "Convert Latest Save.command", click "Done" when macOS refuses, then go to
+System Settings > Privacy & Security, scroll down and click "Open Anyway".
+
+
+CONVERTING
+----------
+1. In CK3, save your game (any save works, including ironman).
+2. Double-click "Convert Latest Save.command". It converts your newest save. This takes from
+   a few seconds to a couple of minutes.
+3. Open the EU4 launcher, add "Converted - <save name>" to a playset, and start a new game.
+
+To convert a specific save, or name the mod, use Terminal:
+    ./convert.sh "My Save.ck3"
+    ./convert.sh "My Save.ck3" MyModName
+
+To change conversion options (start date, HRE handling, ...), see OPTIONS.txt.
+
+If something goes wrong, the details are in CK3ToEU4/log.txt.

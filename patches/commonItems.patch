@@ -1,0 +1,207 @@
+diff --git a/LinuxUtils.cpp b/LinuxUtils.cpp
+index 73ebe69..f76bbd5 100644
+--- a/LinuxUtils.cpp
++++ b/LinuxUtils.cpp
+@@ -9,9 +9,14 @@
+ #include <fcntl.h>
+ #include <filesystem>
+ #include <iconv.h>
++#ifdef __APPLE__
++#include <CoreFoundation/CoreFoundation.h>
++#endif
+ #include <iostream>
+ #include <set>
++#ifdef __linux__
+ #include <sys/sendfile.h>
++#endif
+ #include <sys/stat.h>
+ #include <unistd.h>
+ #include <vector>
+@@ -51,7 +56,7 @@ void fprintf_s_Linux(FILE* file, const char* format, ...)
+ 	va_end(arg_ptr);
+ }
+ 
+-#ifdef __linux__
++#if defined(__linux__) || defined(__APPLE__)
+ HANDLE GetStdHandle(int nothing)
+ {
+ 	return 1;
+@@ -458,28 +463,118 @@ std::string convertUTF8ToASCII(const std::string& UTF8)
+ 
+ std::string convertUTF8To8859_15(const std::string& UTF8)
+ {
+-	return ConvertString<std::string, std::string>("UTF−8", "ISO−8859−15//TRANSLIT", UTF8);
++	return ConvertString<std::string, std::string>("UTF-8", "ISO-8859-15//TRANSLIT", UTF8);
++}
++
++
++bool isValidUTF8(const std::string& text)
++{
++	for (std::size_t i = 0; i < text.size();)
++	{
++		const auto lead = static_cast<unsigned char>(text[i]);
++		std::size_t length = 0;
++		if (lead < 0x80)
++			length = 1;
++		else if ((lead & 0xE0) == 0xC0)
++			length = 2;
++		else if ((lead & 0xF0) == 0xE0)
++			length = 3;
++		else if ((lead & 0xF8) == 0xF0)
++			length = 4;
++		else
++			return false;
++		if (i + length > text.size())
++			return false;
++		for (std::size_t j = 1; j < length; ++j)
++			if ((static_cast<unsigned char>(text[i + j]) & 0xC0) != 0x80)
++				return false;
++		i += length;
++	}
++	return true;
++}
++
++// iconv to Windows-1252 without logging; false if any character can't be represented.
++bool quietUTF8ToWin1252(const std::string& in, std::string& out)
++{
++	const iconv_t descriptor = iconv_open("CP1252//TRANSLIT", "UTF-8");
++	if (descriptor == reinterpret_cast<iconv_t>(-1))
++		return false;
++	std::string buffer(in.size() * 4 + 4, '\0');
++	auto* inPtr = const_cast<char*>(in.data());
++	auto inLeft = in.size();
++	auto* outPtr = buffer.data();
++	auto outLeft = buffer.size();
++	const auto result = iconv(descriptor, &inPtr, &inLeft, &outPtr, &outLeft);
++	iconv_close(descriptor);
++	if (result == static_cast<size_t>(-1) || inLeft != 0)
++		return false;
++	out.assign(buffer.data(), buffer.size() - outLeft);
++	return true;
+ }
+ 
++#ifdef __APPLE__
++// Reduce one character to plain Latin letters (e.g. "ǎ" -> "a", "中" -> "zhong") using the system's ICU transforms.
++std::string latinizeUTF8(const std::string& text)
++{
++	const CFMutableStringRef mutableString = CFStringCreateMutable(nullptr, 0);
++	CFStringAppendCString(mutableString, text.c_str(), kCFStringEncodingUTF8);
++	CFStringTransform(mutableString, nullptr, kCFStringTransformToLatin, false);
++	CFStringTransform(mutableString, nullptr, kCFStringTransformStripCombiningMarks, false);
++	char buffer[256] = {};
++	CFStringGetCString(mutableString, buffer, sizeof buffer, kCFStringEncodingUTF8);
++	CFRelease(mutableString);
++	return buffer;
++}
++#endif
+ 
+ std::string convertUTF8ToWin1252(const std::string& UTF8)
+ {
+-	return ConvertString<std::string, std::string>("UTF−8", "CP1252//TRANSLIT", UTF8);
++	// Some callers pass text that came from EU4's own (already Windows-1252) files. iconv rejects those
++	// and we'd return an empty string, so pass anything that isn't valid UTF-8 through untouched.
++	if (!isValidUTF8(UTF8))
++		return UTF8;
++	if (std::string converted; quietUTF8ToWin1252(UTF8, converted))
++		return converted;
++
++	// Something has no Windows-1252 equivalent (e.g. pinyin tone marks). Go character by character
++	// rather than losing the whole string, like Windows' converter does.
++	std::string result;
++	for (std::size_t i = 0; i < UTF8.size();)
++	{
++		const auto lead = static_cast<unsigned char>(UTF8[i]);
++		const std::size_t length = lead < 0x80 ? 1 : (lead & 0xE0) == 0xC0 ? 2 : (lead & 0xF0) == 0xE0 ? 3 : 4;
++		const auto character = UTF8.substr(i, length);
++		i += length;
++		if (std::string converted; quietUTF8ToWin1252(character, converted))
++		{
++			result += converted;
++			continue;
++		}
++#ifdef __APPLE__
++		if (std::string converted; quietUTF8ToWin1252(latinizeUTF8(character), converted))
++		{
++			result += converted;
++			continue;
++		}
++#endif
++		result += '?';
++	}
++	return result;
+ }
+ 
+ std::string convertUTF8ToWin1251(const std::string& UTF8)
+ {
+-	return ConvertString<std::string, std::string>("UTF−8", "CP1251//TRANSLIT", UTF8);
++	return ConvertString<std::string, std::string>("UTF-8", "CP1251//TRANSLIT", UTF8);
+ }
+ 
+ std::string convertUTF8ToWin1250(const std::string& UTF8)
+ {
+-	return ConvertString<std::string, std::string>("UTF−8", "CP1250//TRANSLIT", UTF8);
++	return ConvertString<std::string, std::string>("UTF-8", "CP1250//TRANSLIT", UTF8);
+ }
+ 
+ std::string convert8859_15ToUTF8(const std::string& input)
+ {
+-	return ConvertString<std::string, std::string>("ISO−8859−15", "UTF-8//TRANSLIT", input);
++	return ConvertString<std::string, std::string>("ISO-8859-15", "UTF-8//TRANSLIT", input);
+ }
+ 
+ /*
+@@ -489,7 +584,7 @@ std::string convert8859_15ToUTF8(const std::string& input)
+ */
+ std::wstring convert8859_15ToUTF16(const std::string& input)
+ {
+-	return ConvertString<std::string, std::wstring>("ISO−8859−15", "wchar_t//TRANSLIT", input);
++	return ConvertString<std::string, std::wstring>("ISO-8859-15", "wchar_t//TRANSLIT", input);
+ }
+ 
+ std::string convertWin1250ToUTF8(const std::string& Win1250)
+diff --git a/OSCompatibilityLayer.h b/OSCompatibilityLayer.h
+index 4a4bbfe..f464b50 100644
+--- a/OSCompatibilityLayer.h
++++ b/OSCompatibilityLayer.h
+@@ -88,7 +88,7 @@ std::string normalizeUTF8Path(const std::string& utf_8_path);
+ 
+ 
+ // Linux specific defines
+-#ifdef __linux
++#if defined(__linux) || defined(__APPLE__)
+ 
+ // sprintf_s is not implemented on Linux. It functions similarly to the function snprintf, but the return values are
+ // different. Since return values are not used, they are directly translated for now. If return values will some day be
+diff --git a/ParserHelpers.cpp b/ParserHelpers.cpp
+index fa90e33..348ce6e 100644
+--- a/ParserHelpers.cpp
++++ b/ParserHelpers.cpp
+@@ -1,4 +1,6 @@
+ #include "ParserHelpers.h"
++#include <cerrno>
++#include <cstdlib>
+ #include "CommonRegexes.h"
+ #include "Log.h"
+ #include "StringUtils.h"
+@@ -124,12 +126,21 @@ template unsigned long long stringToInteger<unsigned long long>(const std::strin
+ double stringToDouble(const std::string& str)
+ {
+ 	double theDouble = 0.0;
++#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < 260000
++	// Apple's libc++ only has floating-point from_chars on macOS 26+. strtod is equivalent in the "C" locale.
++	char* end = nullptr;
++	errno = 0;
++	theDouble = std::strtod(str.c_str(), &end);
++	if (str.empty() || errno == ERANGE || end != str.c_str() + str.size())
++		Log(LogLevel::Warning) << "string to double - invalid argument: " << str;
++#else
+ 	const auto last = str.data() + str.size();
+ 	if (const auto [ptr, ec] = std::from_chars(str.data(), last, theDouble);
+ 		 ec != std::errc() || ptr != last) // conversion either failed or was successful but not all characters matched
+ 	{
+ 		Log(LogLevel::Warning) << "string to double - invalid argument: " << str;
+ 	}
++#endif
+ 	return theDouble;
+ }
+ 

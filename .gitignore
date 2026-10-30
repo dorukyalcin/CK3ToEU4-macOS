@@ -1,0 +1,5 @@
+# Created by scripts/build.sh
+/work/
+/build/
+/dist/
+.DS_Store

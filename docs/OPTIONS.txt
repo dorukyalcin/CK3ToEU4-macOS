@@ -1,0 +1,95 @@
+CONVERSION OPTIONS
+==================
+
+Edit these in the OPTIONS block near the top of convert.sh / "Convert Latest Save.command"
+(open it in TextEdit). Each line is   option_name = "number"   using the numbers below.
+Defaults are marked with *. Descriptions are the official converter's own wording.
+
+start_date: Select starting bookmark:
+    1444 or CK end-date?
+  *1 = Europa Universalis (1444)  (Start at vanilla EU4 start date.)
+   2 = Crusader Universalis (dynamic)  (Start at CK savegame date.)
+   3 = Customized - start_date.txt  (Manually configured.)
+
+dejure: Should countries get permaclaims on de jure land?
+    Some, like BYZ, might get a lot of those.
+  *1 = Yeah, what's the worst that could happen?  (Solid choice for Byzantium players.)
+   2 = No, no, no.  (Let them fabricate like the rest.)
+
+i_am_hre: Which empire inherits EU4 HRE mechanics and shatters?
+    Only one empire can use HRE mechanics.
+  *1 = The HRE (obviously)  (e_hre)
+   2 = Byzantium! (Holy AND Roman AND Empire)  (e_byzantium)
+   3 = Rome?  (e_roman_empire)
+   4 = Defined in i_am_hre.txt  (As you define manually.)
+   5 = None (no HRE shattering)  (Dropped.)
+
+shatter_hre_level: If we're shattering HRE, how far down do we go?
+    HRE should be shattered to duchies as it increases prince number and thus stability.
+  *1 = Down to duchies [default]  (Need Duchies for stability.)
+   2 = Keep kingdoms if any [not recommended]  (Kingdoms remain.)
+
+shatter_empires: Should we shatter other empires?
+    Makes the game more dynamic. New countries won't be united.
+  *1 = No, as they were [default]  (Uses CK3 states.)
+   2 = All of them! [shattered world]  (All empires are broken down. Enjoy your vassal swarms.)
+   3 = Defined in shatter_empires.txt  (As defined manually.)
+
+shatter_level: If we're shattering non-HRE empires, how far down do we go?
+    The more, the best.
+  *1 = Down to duchies.  (Duchies make sense.)
+   2 = Keep kingdoms if any.  (Kingdoms remain.)
+
+celestial_emperor: We assign Mandate of Heaven to owner of h_china. If there's no h_china?
+    We can assign it by province ownership among other methods.
+  *1 = Holder of Bejing! (obviously)  (Mmhm.)
+   2 = Nanjing.  (Not obviously.)
+   3 = Canton?  (Huh.)
+   4 = No, no, no. Destroy the MoH!  (We can get rid of it.)
+
+split_vassals: Split large vassals into EU4 vassal states?
+    Only extraordinarily large vassals will be granted autonomy.
+  *1 = Yes [recommended]
+   2 = No
+
+development: How do we handle province development?
+    Should we stick to vanilla or import CK3?
+  *1 = Use CK3 provinces' development.  (The proper way.)
+   2 = No, stick to EU4 vanilla [discouraged]  (Leave as is.)
+
+multiprovdevtransfer: Expand the sources for development transfer?
+    Useful for competitive MP games in order to retain dev.
+  *1 = Maintain stable dev spread.  (The default.)
+   2 = No, use all CK3 provinces.  (This can cause dev spikes.)
+
+siberia: Clear Siberian Quagmire?
+    Delete all the nomads and tribals?
+  *1 = Only small ones. [default]  (Under 5 provinces.)
+   2 = Burn it all down.  (Clean Siberia.)
+   3 = No, I was playing those! [hampers Russia]  (Leave as is.)
+
+sunset: Should we summon the Aztecs?
+    How should we deal with Sunset Invasion?
+  *1 = No, for the love of God.  (The New World will be in its vanilla state.)
+   2 = Yes, for Mictlantecuhtli!  (The Aztec-Incan War will be remembered by historians.)
+
+dynamicInstitutions: Should institutions and idea selection be dynamic?
+    Should we use the vanilla institution spawn rules/idea selection or should we use a dynamic system?
+  *1 = Historic (Vanilla)  (Use the basegame institution spawn and idea selection.)
+   2 = Dynamic  (Use dynamic institution spawn and idea selection.)
+
+dynasticNames: Do we use dynastic names when available?
+    Mainly for Islamic nations that use dynasty name in title.
+  *1 = Yes, I want Ottomans.  (Use when possible and appropriate.)
+   2 = No, I want Türkiye.  (Disabled.)
+
+discoveredBy: CK Provinces are visible/discovered by:
+    Who sees the provinces in CK scope?
+  *1 = Vanilla (default).  (Import vanilla visibility.)
+   2 = Dynamic.  (Basically, everyone in scope.)
+
+tribalConfederations: Do we merge tribal confederations?
+    They merge into a single tag, akin to Golden Horde.
+  *1 = Yes, merge (default).  (They become a single tag.)
+   2 = No, leave members independent.  (Confederations are dissolved.)
+
